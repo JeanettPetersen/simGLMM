@@ -1,0 +1,15 @@
+Package: simGLMM
+Title: Simulation of data to use in Generalized Linear Mixed Models
+Version: 0.0.0.9000
+Authors@R: c(
+	person("Jeanett Pelck", "Petersen", email = "jpp@math.au.dk", role = c("aut","cre")),
+	person("Johanna", "Bertl", email = "johanna.bertl@math.au.dk", role = c("aut")))
+Description: Implements a simulation function that can simulate various types of GLMM data.
+Depends: R (>= 3.4.3)
+License: file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    mvtnorm (>= 1.0.8),
+    statmod (>= 1.4.30)
+RoxygenNote: 6.1.0
