@@ -9,25 +9,34 @@
 #'
 #' @param clus The number of clusters wanted.
 #' @param rep The number of repetitions in each cluster.
-#' @param var The number of variables. Only needed in case of multivariate data, default is 1.
 #' @param fixedMean A fixed value to enter the linear predictor. In case of multivariate data, the dimension needs to equal the number of variables.
+#' @param fixedCoef A vector (or matrix, in the multivariate case) of fixed regression coefficients to enter the linear predictor. Not implemented yet.
+#' @param fixedMat Matrix of explanatory variables (if any, otherwise NULL). Not implemented yet.
 #' @param covM The variance of the random component representing variation between clusters. In case of multidimensional data, the dimension needs to equal the number of variables.
 #' @param disFam The distribution family. The canonical link function is chosen.
+#' 
 #' @examples
 #' # Simulates 3 blocks with 5 repetitions in each. The linear predictor is 10+random component with variance 5.
-#' simDataGLMM(clus=3,rep=5,fixedMean=10,covM=5,disFam = poisson())
+#' data1dim <- simDataGLMM(clus=3,rep=5,fixedMean=10,covM=5,disFam = poisson())
 #' # Simulates 3 blocks with 5 repetitions in each for 3 variables. The linear predictor is 10+random component with defined covariance matrix.
 #' A <- matrix(runif(3^2)*2-1, ncol=3)
 #' sigma <- t(A) %*% A
-#' simDataGLMM(clus=3,rep=5,fixedMean=rep(10,3),covM=sigma,disFam = poisson())
+#' data3dim <- simDataGLMM(clus=3,rep=5,fixedMean=rep(10,3),covM=sigma,disFam = poisson())
+#' 
+#' @return 
+#' A data frame with columns 'Observation' (number of observation), 'Cluster' (factor) and one column for each output dimension, 'X1', 'X2', etc. 
 
 
-simDataGLMM <- function(clus, rep, var = 1, fixedMean, covM, disFam) {
+simDataGLMM <- function(clus, rep, fixedMean, fixedCoef=NULL, fixedMat = NULL, covM, disFam) {
     require(mvtnorm)
     require(statmod)
-    # Simulate one random efffect per cluster per variable
+  
+    # Determine the number of variables
+    var = nrow(as.matrix(covM))
+  
+    # Simulate one random effect per cluster per variable
     if (var == 1) {
-        RandomEffects <- matrix(rnorm(clus, 0, covM), ncol = 1)
+        RandomEffects <- matrix(rnorm(clus, 0, sqrt(covM)), ncol = 1)
         res <- matrix(nrow = clus * rep, ncol = var)
     } else {
         RandomEffects <- rmvnorm(clus, rep(0, var), covM)

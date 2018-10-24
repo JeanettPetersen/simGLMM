@@ -4,29 +4,36 @@
 \alias{simDataGLMM}
 \title{Simulated data to use in GLMM}
 \usage{
-simDataGLMM(clus, rep, var = 1, fixedMean, covM, disFam)
+simDataGLMM(clus, rep, fixedMean, fixedCoef = NULL, fixedMat = NULL, covM,
+  disFam)
 }
 \arguments{
 \item{clus}{The number of clusters wanted.}
 
 \item{rep}{The number of repetitions in each cluster.}
 
-\item{var}{The number of variables. Only needed in case of multivariate data, default is 1.}
-
 \item{fixedMean}{A fixed value to enter the linear predictor. In case of multivariate data, the dimension needs to equal the number of variables.}
+
+\item{fixedCoef}{A vector (or matrix, in the multivariate case) of fixed regression coefficients to enter the linear predictor. Not implemented yet.}
+
+\item{fixedMat}{Matrix of explanatory variables (if any, otherwise NULL). Not implemented yet.}
 
 \item{covM}{The variance of the random component representing variation between clusters. In case of multidimensional data, the dimension needs to equal the number of variables.}
 
 \item{disFam}{The distribution family. The canonical link function is chosen.}
+}
+\value{
+A data frame with columns 'Observation' (number of observation), 'Cluster' (factor) and one column for each output dimension, 'X1', 'X2', etc.
 }
 \description{
 Simulated data to use in GLMM
 }
 \examples{
 # Simulates 3 blocks with 5 repetitions in each. The linear predictor is 10+random component with variance 5.
-simDataGLMM(clus=3,rep=5,fixedMean=10,covM=5,disFam = poisson())
+data1dim <- simDataGLMM(clus=3,rep=5,fixedMean=10,covM=5,disFam = poisson())
 # Simulates 3 blocks with 5 repetitions in each for 3 variables. The linear predictor is 10+random component with defined covariance matrix.
 A <- matrix(runif(3^2)*2-1, ncol=3)
 sigma <- t(A) \%*\% A
-simDataGLMM(clus=3,rep=5,fixedMean=rep(10,3),covM=sigma,disFam = poisson())
+data3dim <- simDataGLMM(clus=3,rep=5,fixedMean=rep(10,3),covM=sigma,disFam = poisson())
+
 }
