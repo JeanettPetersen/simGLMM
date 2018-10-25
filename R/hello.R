@@ -10,11 +10,8 @@
 #' @param clus The number of clusters wanted.
 #' @param rep The number of repetitions in each cluster.
 #' @param fixedMean A fixed value to enter the linear predictor. In case of multivariate data, the dimension needs to equal the number of variables.
-#' @param fixedCoef A vector (or matrix, in the multivariate case) of fixed regression coefficients to enter the linear predictor. Not implemented yet.
-#' @param fixedMat Matrix of explanatory variables (if any, otherwise NULL). Not implemented yet.
 #' @param covM The variance of the random component representing variation between clusters. In case of multidimensional data, the dimension needs to equal the number of variables.
 #' @param disFam The distribution family. The canonical link function is chosen.
-#' 
 #' @examples
 #' # Simulates 3 blocks with 5 repetitions in each. The linear predictor is 10+random component with variance 5.
 #' data1dim <- simDataGLMM(clus=3,rep=5,fixedMean=10,covM=5,disFam = poisson())
@@ -27,7 +24,7 @@
 #' A data frame with columns 'Observation' (number of observation), 'Cluster' (factor) and one column for each output dimension, 'X1', 'X2', etc. 
 
 
-simDataGLMM <- function(clus, rep, fixedMean, fixedCoef=NULL, fixedMat = NULL, covM, disFam) {
+simDataGLMM <- function(clus, rep, fixedMean, covM, disFam) {
     require(mvtnorm)
     require(statmod)
   
