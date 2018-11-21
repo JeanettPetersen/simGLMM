@@ -10,13 +10,14 @@
 #' @param covM Covariance matrix of the random effects. Currently, only the diagonal is used.
 #' @param disFam The distribution family. The canonical link function is chosen.
 #' @param detailed.output Output all the steps. Default: F. (This option is only for testing and can be removed.)
+#' @param seed integer. Seed used for the simulation. Default: NULL, so the seed provided by the system is used. 
 #' 
 #' @examples
 #' 
 #' # one numeric explanatory variable and 1 factor with 2 levels
 #' fixedMat = as.matrix(runif(10))
 #' randomMat = data.frame(group = as.factor(rep(c("A", "B"), each=5)))
-#' simDataGLMMdesign(fixedMat, fixedCoef=0.5, randomMat, covM = 1, disFam = poisson())
+#' simDataGLMMdesign(fixedMat, fixedCoef=0.5, randomMat, covM = 1, disFam = poisson(), seed = 1234)
 #' 
 #' fixedMat = as.matrix(runif(20), ncol=2)
 #' randomMat = as.factor(rep(c("A", "B"), each=5))
@@ -30,7 +31,7 @@
 #' A data frame consisting of the fixed effects and random effects as given in the input and the simulated response variable 'res'.
 
 
-simDataGLMMdesign <- function(fixedMat, fixedCoef, randomMat, covM, disFam, detailed.output=F) {
+simDataGLMMdesign <- function(fixedMat, fixedCoef, randomMat, covM, disFam, detailed.output=F, seed=NULL) {
   
   require(mvtnorm)
   require(statmod)
@@ -41,15 +42,22 @@ simDataGLMMdesign <- function(fixedMat, fixedCoef, randomMat, covM, disFam, deta
   # Make design matrices, if needed.
 
   # fixedMat: 
+  
+
 
   if(is.data.frame(fixedMat)){
     
     fixedForm = formula( paste("~ 0 +", paste(names(fixedMat), collapse='+')))
     fixedMM = model.matrix(fixedForm, fixedMat)
     
+  } else if(is.matrix(fixedMat)) {
+    
+     fixedMM = fixedMat
+
   } else {
-    if(! (is.matrix(fixedMat) & is.numeric(fixedMat)) )
-      {stop("Please provide a dataframe or a numeric matrix as fixedMat.")}
+    
+    stop("Please provide a dataframe or a numeric matrix as fixedMat.")
+    
   }
 
   
@@ -72,6 +80,8 @@ simDataGLMMdesign <- function(fixedMat, fixedCoef, randomMat, covM, disFam, deta
   
   
   # simulate random effects
+  
+  if(!is.null(seed)) set.seed(seed)
   
   randomVec = numeric(0)
   for(i in 1:ncol(randomMat)){

@@ -5,7 +5,7 @@
 \title{Simulated data to use in GLMM}
 \usage{
 simDataGLMMdesign(fixedMat, fixedCoef, randomMat, covM, disFam,
-  detailed.output = F)
+  detailed.output = F, seed = NULL)
 }
 \arguments{
 \item{fixedMat}{The model matrix (numeric matrix or data.frame of factors and numeric variables) of the fixed effects to enter the linear predictor. Make sure that the contrasts fit together with the specification of the coefficients in fixedCoef.}
@@ -19,6 +19,8 @@ simDataGLMMdesign(fixedMat, fixedCoef, randomMat, covM, disFam,
 \item{disFam}{The distribution family. The canonical link function is chosen.}
 
 \item{detailed.output}{Output all the steps. Default: F. (This option is only for testing and can be removed.)}
+
+\item{seed}{integer. Seed used for the simulation. Default: NULL, so the seed provided by the system is used.}
 }
 \value{
 A data frame consisting of the fixed effects and random effects as given in the input and the simulated response variable 'res'.
@@ -34,7 +36,7 @@ For the Gaussian family, the variance parameter is 1. For the Gamma distribution
 # one numeric explanatory variable and 1 factor with 2 levels
 fixedMat = as.matrix(runif(10))
 randomMat = data.frame(group = as.factor(rep(c("A", "B"), each=5)))
-simDataGLMMdesign(fixedMat, fixedCoef=0.5, randomMat, covM = 1, disFam = poisson())
+simDataGLMMdesign(fixedMat, fixedCoef=0.5, randomMat, covM = 1, disFam = poisson(), seed = 1234)
 
 fixedMat = as.matrix(runif(20), ncol=2)
 randomMat = as.factor(rep(c("A", "B"), each=5))
