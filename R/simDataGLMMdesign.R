@@ -36,16 +36,17 @@ simDataGLMMdesign <- function(fixedMat, fixedCoef, randomMat, covM, disFam, deta
   require(mvtnorm)
   require(statmod)
   
+  # checks: 
+  if(!is.matrix(covM)) stop("Please provide a matrix as the covariance matrix covM.")
+  
   # sample size
   N = nrow(fixedMat)
   
   # Make design matrices, if needed.
 
   # fixedMat: 
-  
 
-
-  if(is.data.frame(fixedMat)){
+    if(is.data.frame(fixedMat)){
     
     fixedForm = formula( paste("~ 0 +", paste(names(fixedMat), collapse='+')))
     fixedMM = model.matrix(fixedForm, fixedMat)
